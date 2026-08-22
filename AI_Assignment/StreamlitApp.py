@@ -28,6 +28,23 @@ with st.sidebar:
 
     st.write("Current Model:")
     st.success(model_name)
+    
+# Reset chat history when model changes
+if "previous_model" not in st.session_state:
+    st.session_state.previous_model = model_name
+
+if st.session_state.previous_model != model_name:
+    st.session_state.messages = [
+        {
+            "role": "assistant",
+            "content": (
+                "Hello! I am the TARUMT Student Assistance Chatbot. "
+                "How can I help you today?"
+            )
+        }
+    ]
+    st.session_state.previous_model = model_name
+    st.rerun()
 
 # Initialize chat history
 if "messages" not in st.session_state:
