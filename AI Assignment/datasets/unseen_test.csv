@@ -1,0 +1,51 @@
+question,expected_intent
+Yo there,greeting
+Good to see you,greeting
+Can you help me?,greeting
+Hello assistant,greeting
+Morning chatbot,greeting
+I would like to study here,admission
+What do I need to do to become a student here?,admission
+Can I enrol in this university?,admission
+I am interested in joining this institution,admission
+Where do new students submit their applications?,admission
+What lessons do I have this afternoon?,timetable
+What classes are scheduled for me later today?,timetable
+Do I have any lessons tomorrow morning?,timetable
+Where can I see today's lesson plan?,timetable
+What time does my next class begin?,timetable
+Where am I sitting for my paper?,examination
+Where do I need to go for my next test?,examination
+Do I have any papers next week?,examination
+When will my next assessment take place?,examination
+Which room is my exam held in?,examination
+How much money is left unpaid?,fees
+What amount is still outstanding?,fees
+Do I have any unpaid tuition charges?,fees
+How can I find my remaining balance?,fees
+Is there still a payment due?,fees
+Are there grants for students?,scholarship
+Does the university offer study grants?,scholarship
+Can students receive funding support?,scholarship
+What financial assistance can I request?,scholarship
+Are education grants open for application?,scholarship
+What modules are part of my course?,programme
+How many years does this course take?,programme
+What will I learn in this programme?,programme
+Can I see the full course outline?,programme
+Which modules do I take next semester?,programme
+Where can I print something?,campus_facility
+Is there somewhere to photocopy documents?,campus_facility
+Where can students use computers?,campus_facility
+Is there a quiet place for studying?,campus_facility
+Where can I buy food on campus?,campus_facility
+I am finished asking questions,goodbye
+I do not need any more help,goodbye
+That answers all my questions,goodbye
+I am leaving now,goodbye
+We can end the conversation,goodbye
+What is the weather forecast for this weekend?,unknown
+Can you recommend a movie to watch?,unknown
+Who won the football competition yesterday?,unknown
+How do I cook chicken curry?,unknown
+What is the latest world news?,unknown

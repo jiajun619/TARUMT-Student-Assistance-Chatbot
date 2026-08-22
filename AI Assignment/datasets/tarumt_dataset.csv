@@ -1,0 +1,227 @@
+question,intent
+Hello,greeting
+Hi,greeting
+Good morning,greeting
+Good afternoon,greeting
+Hey there,greeting
+Hey,greeting
+Hello there,greeting
+Good evening,greeting
+Nice to meet you,greeting
+Greetings,greeting
+Yo chatbot,greeting
+Hey yo,greeting
+Yo assistant,greeting
+Hi can you assist me?,greeting
+Hello can you help me?,greeting
+Hi there assistant,greeting
+Greetings assistant,greeting
+Hello chatbot,greeting
+Hey can you assist me?,greeting
+Good day assistant,greeting
+How do I apply for a programme?,admission
+Where can I submit my application?,admission
+What are the admission requirements?,admission
+When is the application deadline?,admission
+How can I check my application status?,admission
+How can I apply to TARUMT?,admission
+What documents are needed for admission?,admission
+Can I apply online?,admission
+How do I know whether my application was accepted?,admission
+Who can I contact about admission?,admission
+I want to join TARUMT,admission
+How can I become a TARUMT student?,admission
+I am interested in studying at TARUMT,admission
+How do I enrol at TARUMT?,admission
+Can I study at TARUMT?,admission
+I am interested in becoming a TARUMT student,admission
+I would like to enrol at this university,admission
+How can I begin studying at TARUMT?,admission
+I want to apply to study here,admission
+What should I do to become a student here?,admission
+Where can I check my class timetable?,timetable
+When will the timetable be released?,timetable
+How do I view my tutorial schedule?,timetable
+Where can I see my lecture time?,timetable
+How can I check my weekly class schedule?,timetable
+Where can I find my class schedule?,timetable
+What time is my tutorial class?,timetable
+How do I check my lecture timetable?,timetable
+Where can I see my weekly timetable?,timetable
+Has the class timetable been released?,timetable
+How can I know my timetable for today?,timetable
+Where can I check today's classes?,timetable
+What classes do I have today?,timetable
+Do I have any class today?,timetable
+What is my schedule today?,timetable
+What lessons are scheduled for today?,timetable
+Which lessons do I have later?,timetable
+What classes are scheduled this afternoon?,timetable
+Can I see today's lesson schedule?,timetable
+Do I have lessons later today?,timetable
+Where can I check my examination timetable?,examination
+When is my final examination?,examination
+How can I find my examination venue?,examination
+Where can I view my examination schedule?,examination
+When will the examination results be released?,examination
+Where can I check my exam date?,examination
+What is my exam venue?,examination
+When will exam results be available?,examination
+How do I view my final exam schedule?,examination
+Where can I find examination information?,examination
+When is my next paper?,examination
+When is my next test?,examination
+What time is my next exam?,examination
+Do I have an exam soon?,examination
+When is my upcoming examination?,examination
+Where will my next assessment be held?,examination
+What time does my next paper begin?,examination
+Do I have an assessment tomorrow?,examination
+Where can I check my upcoming test?,examination
+When is my next examination session?,examination
+How much is the tuition fee?,fees
+Where can I check my outstanding fees?,fees
+How can I pay my tuition fees?,fees
+When is the fee payment deadline?,fees
+What payment methods are available?,fees
+Can I pay my fees online?,fees
+Where do I make fee payment?,fees
+How much do I need to pay this semester?,fees
+Can I pay tuition fees by instalment?,fees
+How do I check my payment status?,fees
+How much money remains unpaid?,fees
+Do I still owe any fees?,fees
+What amount is outstanding in my account?,fees
+How can I check the unpaid balance?,fees
+Is there any remaining tuition payment?,fees
+How much is still payable?,fees
+What is my remaining fee balance?,fees
+Do I have any unpaid charges?,fees
+Where can I see the amount due?,fees
+Is my tuition payment complete?,fees
+How can I apply for a scholarship?,scholarship
+What scholarships are available?,scholarship
+What are the scholarship requirements?,scholarship
+When is the scholarship application deadline?,scholarship
+How can I check my scholarship application status?,scholarship
+Am I eligible for a scholarship?,scholarship
+Where can I find scholarship information?,scholarship
+How do I submit a scholarship application?,scholarship
+What financial aid is available?,scholarship
+Who can I contact about scholarships?,scholarship
+Is financial assistance available?,scholarship
+Can I get financial support?,scholarship
+Is there any financial aid for students?,scholarship
+Can students receive study assistance?,scholarship
+What financial help can I apply for?,scholarship
+Are student grants available?,scholarship
+Can I apply for an education grant?,scholarship
+Does TARUMT provide grants?,scholarship
+What funding support is available for students?,scholarship
+Can students receive financial grants?,scholarship
+Where can I check my programme structure?,programme
+What subjects will I study this semester?,programme
+How long is my programme?,programme
+What subjects are included in my programme?,programme
+Where can I view my course structure?,programme
+Where can I see the subjects in my programme?,programme
+What is the duration of my course?,programme
+How many semesters are in my programme?,programme
+Which subjects are offered this semester?,programme
+Where can I download my programme structure?,programme
+What modules are offered next semester?,programme
+Which subjects will I take in the next semester?,programme
+What courses are included in the coming semester?,programme
+Can I see next semester's module list?,programme
+What subjects are included next semester?,programme
+Can I view the modules for my next semester?,programme
+What is covered in my course?,programme
+How many years is this programme?,programme
+Where can I find the complete course outline?,programme
+Which subjects belong to my programme?,programme
+Where is the library?,campus_facility
+Where is the computer lab?,campus_facility
+What time does the library open?,campus_facility
+Where can I find the cafeteria?,campus_facility
+What facilities are available on campus?,campus_facility
+What campus facilities are available?,campus_facility
+Where is the cafeteria located?,campus_facility
+What are the library operating hours?,campus_facility
+Is there a computer laboratory on campus?,campus_facility
+Where can I find student facilities?,campus_facility
+Where can I study on campus?,campus_facility
+Is there a study area on campus?,campus_facility
+Where is the student study space?,campus_facility
+Can I study in the library?,campus_facility
+Are there quiet study areas?,campus_facility
+Where is the printing facility?,campus_facility
+Can I print documents on campus?,campus_facility
+Is there a printer available for students?,campus_facility
+Where can students use a printer?,campus_facility
+Does the campus provide printing services?,campus_facility
+Where is the campus computer lab?,campus_facility
+Where is the student computer laboratory?,campus_facility
+How do I locate the computer lab?,campus_facility
+Which building contains the computer laboratory?,campus_facility
+Is there a computer room for students?,campus_facility
+Where are the student computers located?,campus_facility
+Can students access the computer lab?,campus_facility
+I need to use a computer on campus,campus_facility
+Does the campus provide computer facilities?,campus_facility
+Which campus facility has computers?,campus_facility
+Where is the campus food court?,campus_facility
+Is there a place to buy meals on campus?,campus_facility
+Where can students get food?,campus_facility
+Does the campus have a cafeteria?,campus_facility
+Where is the printing service on campus?,campus_facility
+Can students print documents at TARUMT?,campus_facility
+Where can I use a photocopy machine?,campus_facility
+Is photocopying available on campus?,campus_facility
+Goodbye,goodbye
+Bye,goodbye
+Thank you,goodbye
+See you,goodbye
+That is all,goodbye
+Thanks for your help,goodbye
+Thank you very much,goodbye
+See you later,goodbye
+I have no more questions,goodbye
+I am done for now,goodbye
+I have finished my questions,goodbye
+I am done asking for help,goodbye
+I do not have anything else to ask,goodbye
+That completes my questions,goodbye
+I am finished for now,goodbye
+I need to leave now,goodbye
+I am going now,goodbye
+Please end this chat,goodbye
+That is the end of the conversation,goodbye
+We can stop chatting now,goodbye
+I have to leave now,goodbye
+I need to go now,goodbye
+I am leaving the chat,goodbye
+What is the weather today?,unknown
+Will it rain tomorrow?,unknown
+What is the temperature outside?,unknown
+Who is the president?,unknown
+Tell me a joke,unknown
+What is your favourite movie?,unknown
+Can you play music?,unknown
+What is the capital of Japan?,unknown
+How do I cook fried rice?,unknown
+What time is the football match?,unknown
+Who won the game yesterday?,unknown
+Can you order food for me?,unknown
+What is two plus two?,unknown
+Can you recommend a restaurant?,unknown
+How old are you?,unknown
+What is your name?,unknown
+Can you sing a song?,unknown
+Where should I go for vacation?,unknown
+What is the latest news?,unknown
+Can you translate this sentence?,unknown
+How do I repair my computer?,unknown
+What phone should I buy?,unknown
+Can you book a hotel?,unknown
+What is Bitcoin?,unknown
+Tell me about dinosaurs,unknown

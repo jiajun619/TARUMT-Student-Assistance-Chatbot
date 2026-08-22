@@ -1,26 +1,42 @@
-from NLP import rejoin
-from Responses import responses_data
 import random
 import joblib
+import numpy as np
+from NLP import rejoin
+from Responses import responses_data
 
 _vectorizer = joblib.load("model/vectorizer.joblib")
-_model = joblib.load("model/model.joblib")
+_logistic_model = joblib.load("model/logistic_model.joblib")
+_linearsvc_model = joblib.load("model/linearsvc_model.joblib")
 
-CONFIDENCE_THRESHOLD = 0.35
 
-
-def predict_intent(message: str):
+def predict_intent(message: str, model_name: str = "LinearSVC") -> tuple[str, float]:
     cleaned = rejoin(message)
+
+    if not cleaned:
+        return "unknown", 0.0
+
     X = _vectorizer.transform([cleaned])
-    probs = _model.predict_proba(X)[0]
-    best_idx = probs.argmax()
-    intent = _model.classes_[best_idx]
-    confidence = probs[best_idx]
-    if confidence < CONFIDENCE_THRESHOLD:
-        return "unknown", confidence
-    return intent, confidence
+
+    if model_name == "Logistic Regression":
+        probabilities = _logistic_model.predict_proba(X)[0]
+        best_index = int(np.argmax(probabilities))
+        intent = _logistic_model.classes_[best_index]
+        score = float(probabilities[best_index])
+
+    else:
+        scores = _linearsvc_model.decision_function(X)[0]
+        best_index = int(np.argmax(scores))
+        intent = _linearsvc_model.classes_[best_index]
+        score = float(scores[best_index])
+
+    return intent, score
 
 
-def chatbot(message: str) -> str:
-    intent, confidence = predict_intent(message)
-    return random.choice(responses_data.get(intent, responses_data["unknown"]))
+def chatbot(message: str, model_name: str = "LinearSVC") -> tuple[str, str, float]:
+    intent, score = predict_intent(message, model_name)
+
+    response = random.choice(
+        responses_data.get(intent, responses_data["unknown"])
+    )
+
+    return response, intent, score

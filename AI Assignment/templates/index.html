@@ -3,64 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>TARUMT Student Assistance Chatbot</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='index.css') }}"
+    >
 </head>
+
 <body>
     <div class="chat-container">
 
         <h2>TARUMT Smart Student Assistant</h2>
-    
+
         <div id="chat-box"></div>
-    
+
         <div class="input-area">
-            <input type="text" id="message" placeholder="Ask me anything...">
-            <button onclick="sendMessage()">Send</button>
+            <input
+                type="text"
+                id="message"
+                placeholder="Ask a TARUMT-related question..."
+                autocomplete="off"
+            >
+
+            <button id="send-button" type="button">
+                Send
+            </button>
         </div>
 
     </div>
 
     <script>
-    
-    function sendMessage(){
-    
-        let message = document.getElementById("message").value;
-        if(message==="") return;
-        let chatBox = document.getElementById("chat-box");
-    
-        chatBox.innerHTML += `
-            <div class="user">
-                <b>You:</b> ${message}
-            </div>
-        `;
-    
-        fetch("/chat",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-                message:message
-            })
-    
-        })
-    
-        .then(response=>response.json())
-        .then(data=>{
-    
-            chatBox.innerHTML += `
-                <div class="bot">
-                    <b>Bot:</b> ${data.response}
-                </div>
-            `;
-    
-            document.getElementById("message").value="";
-            chatBox.scrollTop=chatBox.scrollHeight;
+        const messageInput = document.getElementById("message");
+        const sendButton = document.getElementById("send-button");
+        const chatBox = document.getElementById("chat-box");
+
+
+        function addMessage(sender, message, className) {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = className;
+
+            const senderLabel = document.createElement("b");
+            senderLabel.textContent = sender + ": ";
+
+            const messageText = document.createElement("span");
+            messageText.textContent = message;
+
+            messageDiv.appendChild(senderLabel);
+            messageDiv.appendChild(messageText);
+
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            return messageDiv;
+        }
+
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+
+            if (message === "") {
+                messageInput.focus();
+                return;
+            }
+
+            addMessage("You", message, "user");
+
+            messageInput.value = "";
+            messageInput.disabled = true;
+            sendButton.disabled = true;
+
+            const typingMessage = addMessage(
+                "Bot",
+                "Typing...",
+                "bot typing"
+            );
+
+            try {
+                const response = await fetch("/chat", {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        message: message
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("The server returned an error.");
+                }
+
+                const data = await response.json();
+
+                typingMessage.remove();
+
+                addMessage(
+                    "Bot",
+                    data.response || "Sorry, no response was received.",
+                    "bot"
+                );
+
+            } catch (error) {
+                typingMessage.remove();
+
+                addMessage(
+                    "Bot",
+                    "Sorry, something went wrong. Please try again.",
+                    "bot error"
+                );
+
+                console.error(error);
+
+            } finally {
+                messageInput.disabled = false;
+                sendButton.disabled = false;
+                messageInput.focus();
+            }
+        }
+
+
+        sendButton.addEventListener("click", sendMessage);
+
+
+        messageInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();
+            }
         });
-    
-    }
-    
+
+
+        messageInput.focus();
     </script>
 
 </body>
