@@ -1,12 +1,19 @@
 import random
+from pathlib import Path
+
 import joblib
 import numpy as np
+
 from NLP import rejoin
 from Responses import responses_data
 
-_vectorizer = joblib.load("model/vectorizer.joblib")
-_logistic_model = joblib.load("model/logistic_model.joblib")
-_linearsvc_model = joblib.load("model/linearsvc_model.joblib")
+
+BASE_DIR = Path(__file__).resolve().parent
+MODEL_DIR = BASE_DIR / "model"
+
+_vectorizer = joblib.load(MODEL_DIR / "vectorizer.joblib")
+_logistic_model = joblib.load(MODEL_DIR / "logistic_model.joblib")
+_linearsvc_model = joblib.load(MODEL_DIR / "linearsvc_model.joblib")
 
 
 def predict_intent(message: str, model_name: str = "LinearSVC") -> tuple[str, float]:
