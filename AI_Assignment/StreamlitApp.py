@@ -3,6 +3,7 @@ from pathlib import Path
 import joblib
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 from sklearn.metrics import (
     accuracy_score,
@@ -27,6 +28,13 @@ BASE_DIR = Path(__file__).resolve().parent
 
 MODEL_DIR = BASE_DIR / "model"
 UNSEEN_DATASET_PATH = BASE_DIR / "datasets" / "unseen_test.csv"
+
+
+# Greeting message
+GREETING_MESSAGE = (
+    "Hello! I am the TARUMT Student Assistance Chatbot. "
+    "How can I help you today?"
+)
 
 
 # Load models
@@ -180,160 +188,308 @@ def evaluate_models():
     )
 
 
-# Title
-st.title("🎓 TARUMT Student Assistance Chatbot")
+# Student-facing settings
+STUDENT_MODEL = "LinearSVC"
 
-st.caption(
-    "Natural Language Processing chatbot using "
-    "Logistic Regression and LinearSVC."
-)
+NEXT_ACTIONS = {
+    "admission": (
+        "Prepare the required documents and use the TARUMT online application "
+        "system. Check your application status and email for updates."
+    ),
+    "timetable": "Open TARC App → Class Timetable.",
+    "examination": (
+        "Open TARC App and check the Examination section for your exam "
+        "timetable or results."
+    ),
+    "fees": "Open TARC App → Billing → Current Billing.",
+    "scholarship": (
+        "Check TARUMT's official scholarship information and review the "
+        "eligibility and application requirements."
+    ),
+    "programme": "Open Student Intranet → Programme → Programme Structure.",
+    "campus_facility": (
+        "Open TARC App → Campus Map. For the latest facility operating hours, "
+        "check the official campus information or contact your campus."
+    ),
+    "unknown": (
+        "Try asking about admission, timetable, examination, fees, scholarship, "
+        "programme, or campus facilities."
+    ),
+}
+
+POPULAR_QUESTIONS = [
+    "How do I check my class timetable?",
+    "Where can I check my current fees?",
+    "Where can I find my exam timetable?",
+    "How do I apply to TARUMT?",
+]
 
 
-# Tabs
-chat_tab, comparison_tab = st.tabs(
-    [
-        "💬 Chatbot",
-        "📊 Model Comparison",
+def reset_chat():
+    st.session_state.messages = [
+        {
+            "role": "assistant",
+            "content": GREETING_MESSAGE,
+        }
     ]
-)
 
 
-# Chatbot tab
-with chat_tab:
+def process_user_message(message):
+    if not message:
+        return
 
-    # Sidebar
-    with st.sidebar:
-        st.header("⚙️ Settings")
+    st.session_state.messages.append({
+        "role": "user",
+        "content": message,
+    })
 
-        model_name = st.radio(
-            "Select Model",
-            [
-                "Logistic Regression",
-                "LinearSVC",
-            ],
-            index=1,
+    try:
+        response, intent, score = chatbot(
+            message,
+            STUDENT_MODEL,
         )
 
-        st.divider()
+        assistant_message = {
+            "role": "assistant",
+            "content": response,
+            "intent": intent,
+        }
 
-        st.write("Current Model:")
-        st.success(model_name)
+        next_action = NEXT_ACTIONS.get(intent)
 
-        if st.button("Clear Chat"):
-            st.session_state.messages = [
-                {
-                    "role": "assistant",
-                    "content": (
-                        "Hello! I am the TARUMT Student Assistance Chatbot. "
-                        "How can I help you today?"
-                    ),
-                }
-            ]
+        if next_action:
+            assistant_message["next_action"] = next_action
 
-            st.rerun()
+        st.session_state.messages.append(assistant_message)
 
-    # Reset chat when model changes
-    if "previous_model" not in st.session_state:
-        st.session_state.previous_model = model_name
+    except Exception:
+        st.session_state.messages.append({
+            "role": "assistant",
+            "content": (
+                "Sorry, something went wrong while processing your question. "
+                "Please try again."
+            ),
+        })
 
-    if st.session_state.previous_model != model_name:
-        st.session_state.messages = [
-            {
-                "role": "assistant",
-                "content": (
-                    "Hello! I am the TARUMT Student Assistance Chatbot. "
-                    "How can I help you today?"
-                ),
-            }
-        ]
+def scroll_chat_to_bottom(trigger_id):
+    components.html(
+        f"""
+        <script>
+            const triggerId = {trigger_id};
+            const doc = window.parent.document;
+            const win = window.parent;
 
-        st.session_state.previous_model = model_name
-        st.rerun()
+            function findScrollableParent(element) {{
+                let current = element.parentElement;
 
-    # Initialize chat history
-    if "messages" not in st.session_state:
-        st.session_state.messages = [
-            {
-                "role": "assistant",
-                "content": (
-                    "Hello! I am the TARUMT Student Assistance Chatbot. "
-                    "How can I help you today?"
-                ),
-            }
-        ]
+                while (current) {{
+                    const style = win.getComputedStyle(current);
 
-    st.write(
-        "Ask me about admissions, timetables, examinations, "
-        "fees, scholarships, programmes, and campus facilities."
+                    const canScroll =
+                        current.scrollHeight > current.clientHeight;
+
+                    const overflowAllowsScroll =
+                        style.overflowY === "auto" ||
+                        style.overflowY === "scroll" ||
+                        style.overflowY === "overlay";
+
+                    if (canScroll && overflowAllowsScroll) {{
+                        return current;
+                    }}
+
+                    current = current.parentElement;
+                }}
+
+                return null;
+            }}
+
+            function scrollEverything() {{
+                const chatAnchor =
+                    doc.getElementById("chat-bottom-anchor");
+
+                const pageAnchor =
+                    doc.getElementById("chat-page-anchor");
+
+                if (!chatAnchor || !pageAnchor) {{
+                    return false;
+                }}
+
+                // Scroll inside chat box
+                const chatScroller =
+                    findScrollableParent(chatAnchor);
+
+                if (chatScroller) {{
+                    chatScroller.scrollTop =
+                        chatScroller.scrollHeight;
+                }}
+
+                // Scroll Streamlit outer page
+                const pageScroller =
+                    findScrollableParent(pageAnchor);
+
+                if (pageScroller) {{
+                    pageScroller.scrollTo({{
+                        top: pageScroller.scrollHeight,
+                        behavior: "smooth"
+                    }});
+                }} else {{
+                    pageAnchor.scrollIntoView({{
+                        behavior: "smooth",
+                        block: "end"
+                    }});
+                }}
+
+                return true;
+            }}
+
+            let attempts = 0;
+
+            const timer = setInterval(() => {{
+                attempts++;
+
+                if (scrollEverything() || attempts >= 20) {{
+                    clearInterval(timer);
+                }}
+            }}, 100);
+        </script>
+        <!-- scroll-trigger-{trigger_id} -->
+        """,
+        height=0,
+    )
+    
+# Sidebar navigation
+with st.sidebar:
+    st.header("🎓 Navigation")
+
+    page = st.radio(
+        "Select Page",
+        [
+            "🎓 Student Chatbot",
+            "📊 Technical Evaluation",
+        ],
     )
 
-    # Display chat history
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.write(message["content"])
+    st.divider()
 
-    # User input
+    if page == "🎓 Student Chatbot":
+        st.subheader("About")
+        st.write(
+            "This chatbot helps students find common TARUMT information "
+            "and the next step to take."
+        )
+
+        if st.button("Clear Chat", use_container_width=True):
+            reset_chat()
+            st.rerun()
+
+
+# Student chatbot page
+if page == "🎓 Student Chatbot":
+    st.title("🎓 TARUMT Student Assistance Chatbot")
+
+    st.caption(
+        "Ask a TARUMT-related question and get guidance on what to do next."
+    )
+
+    if "messages" not in st.session_state:
+        reset_chat()
+
+    st.subheader("Quick Help")
+
+    quick_cols = st.columns(4)
+
+    quick_labels = [
+        "📅 Timetable",
+        "💳 Fees",
+        "📝 Examination",
+        "🎓 Admission",
+    ]
+
+    for col, label, question in zip(
+        quick_cols,
+        quick_labels,
+        POPULAR_QUESTIONS,
+    ):
+        with col:
+            if st.button(
+                label,
+                use_container_width=True,
+            ):
+                process_user_message(question)
+
+                st.session_state.scroll_trigger = (
+                    st.session_state.get("scroll_trigger", 0) + 1
+                )
+
+                st.session_state.scroll_to_latest = True
+                st.rerun()
+
+    st.write(
+        "You can also ask about scholarships, programmes, and campus facilities."
+    )
+
+    # Scrollable chat history
+    chat_container = st.container(
+        height=520,
+        border=True,
+    )
+
+    with chat_container:
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.write(message["content"])
+
+                if "next_action" in message:
+                    st.markdown("**✅ What you can do next**")
+                    st.info(message["next_action"])
+
+        # Bottom of chat history
+        st.markdown(
+            '<div id="chat-bottom-anchor"></div>',
+            unsafe_allow_html=True,
+        )
+            
+    # Marker for automatic scrolling
+    st.markdown(
+        '<div id="chat-page-anchor"></div>',
+        unsafe_allow_html=True,
+    )
+    
+
+    # Automatically scroll to latest response
+    if st.session_state.pop("scroll_to_latest", False):
+        scroll_chat_to_bottom(
+            st.session_state.get("scroll_trigger", 0)
+        )
+
+    # Fixed chat input
     user_message = st.chat_input(
-        "Type your question here..."
+        "Ask a TARUMT question..."
     )
 
     if user_message:
-        st.session_state.messages.append({
-            "role": "user",
-            "content": user_message,
-        })
+        process_user_message(user_message)
 
-        with st.chat_message("user"):
-            st.write(user_message)
+        st.session_state.scroll_trigger = (
+            st.session_state.get("scroll_trigger", 0) + 1
+        )
 
-        try:
-            response, intent, score = chatbot(
-                user_message,
-                model_name,
-            )
-
-            st.session_state.messages.append({
-                "role": "assistant",
-                "content": response,
-            })
-
-            with st.chat_message("assistant"):
-                st.write(response)
-
-                with st.expander("Prediction Details"):
-                    st.write(
-                        f"**Model:** {model_name}"
-                    )
-
-                    st.write(
-                        f"**Predicted Intent:** {intent}"
-                    )
-
-                    if model_name == "Logistic Regression":
-                        st.write(
-                            f"**Probability:** {score:.4f}"
-                        )
-                    else:
-                        st.write(
-                            f"**Decision Score:** {score:.4f}"
-                        )
-
-        except Exception as error:
-            st.error(
-                "Sorry, something went wrong."
-            )
-
-            st.write(error)
+        st.session_state.scroll_to_latest = True
+        st.rerun()
 
 
-# Model comparison tab
-with comparison_tab:
+# Technical evaluation page
+elif page == "📊 Technical Evaluation":
+    st.title("📊 Technical Evaluation")
 
-    st.header("📊 Model Performance Comparison")
+    st.caption(
+        "Model evaluation for Logistic Regression and LinearSVC using the "
+        "separate unseen test dataset."
+    )
 
-    st.write(
-        "The two trained models are evaluated using "
-        "the separate unseen test dataset."
+    st.info(
+        "This page is for evaluating the AI models. The Student Chatbot page "
+        "is the main user-facing prototype."
     )
 
     (
@@ -365,10 +521,8 @@ with comparison_tab:
 
     display_comparison = display_comparison.rename(
         columns={
-            "Logistic Regression":
-                "Logistic Regression (%)",
-            "LinearSVC":
-                "LinearSVC (%)",
+            "Logistic Regression": "Logistic Regression (%)",
+            "LinearSVC": "LinearSVC (%)",
         }
     )
 
@@ -406,60 +560,56 @@ with comparison_tab:
     # Best model
     if logistic_accuracy > linearsvc_accuracy:
         st.success(
-            "Logistic Regression achieved the higher "
-            "accuracy on the unseen test dataset."
+            "Logistic Regression achieved the higher accuracy on the unseen "
+            "test dataset."
         )
 
     elif linearsvc_accuracy > logistic_accuracy:
         st.success(
-            "LinearSVC achieved the higher accuracy "
-            "on the unseen test dataset."
+            "LinearSVC achieved the higher accuracy on the unseen test dataset."
         )
 
     else:
         st.info(
-            "Both models achieved the same accuracy "
-            "on the unseen test dataset."
+            "Both models achieved the same accuracy on the unseen test dataset."
         )
 
     # Confusion matrices
-    st.subheader("Confusion Matrices")
+    with st.expander("View Confusion Matrices"):
+        st.write("**Logistic Regression**")
 
-    st.write("**Logistic Regression**")
+        st.dataframe(
+            logistic_cm,
+            use_container_width=True,
+        )
 
-    st.dataframe(
-        logistic_cm,
-        use_container_width=True,
-    )
+        st.write("**LinearSVC**")
 
-    st.write("**LinearSVC**")
-
-    st.dataframe(
-        linearsvc_cm,
-        use_container_width=True,
-    )
+        st.dataframe(
+            linearsvc_cm,
+            use_container_width=True,
+        )
 
     # Detailed predictions
-    st.subheader("Detailed Predictions")
-
-    model_result = st.selectbox(
-        "Select prediction results to view",
-        [
-            "Logistic Regression",
-            "LinearSVC",
-        ],
-    )
-
-    if model_result == "Logistic Regression":
-        st.dataframe(
-            logistic_results,
-            use_container_width=True,
-            hide_index=True,
+    with st.expander("View Detailed Predictions"):
+        model_result = st.selectbox(
+            "Select prediction results to view",
+            [
+                "Logistic Regression",
+                "LinearSVC",
+            ],
         )
 
-    else:
-        st.dataframe(
-            linearsvc_results,
-            use_container_width=True,
-            hide_index=True,
-        )
+        if model_result == "Logistic Regression":
+            st.dataframe(
+                logistic_results,
+                use_container_width=True,
+                hide_index=True,
+            )
+
+        else:
+            st.dataframe(
+                linearsvc_results,
+                use_container_width=True,
+                hide_index=True,
+            )
