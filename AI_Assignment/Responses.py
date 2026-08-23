@@ -54,8 +54,17 @@ responses_data = {
     ],
 
     "unknown": [
-        "Sorry, that question is outside the current scope of this chatbot.",
-        "I can only assist with common TARUMT enquiries such as admissions, timetables, examinations, fees, scholarships, programmes, and campus facilities.",
-        "I am unable to assist with that topic. Please ask me a TARUMT-related question.",
+        (
+            "Sorry, that question is outside the current scope of this chatbot. "
+            "I can assist with common TARUMT student enquiries."
+        ),
+        (
+            "I’m unable to assist with that topic. "
+            "Please try one of the supported TARUMT topics below."
+        ),
+        (
+            "I’m not sure how to answer that question. "
+            "This chatbot is designed for common TARUMT student enquiries."
+        ),
     ],
 }

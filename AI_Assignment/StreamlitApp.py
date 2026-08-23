@@ -211,17 +211,67 @@ NEXT_ACTIONS = {
         "Open TARC App → Campus Map. For the latest facility operating hours, "
         "check the official campus information or contact your campus."
     ),
-    "unknown": (
-        "Try asking about admission, timetable, examination, fees, scholarship, "
-        "programme, or campus facilities."
-    ),
 }
 
-POPULAR_QUESTIONS = [
-    "How do I check my class timetable?",
-    "Where can I check my current fees?",
-    "Where can I find my exam timetable?",
-    "How do I apply to TARUMT?",
+FEEDBACK_INTENTS = {
+    "admission",
+    "timetable",
+    "examination",
+    "fees",
+    "scholarship",
+    "programme",
+    "campus_facility",
+    "unknown",
+}
+
+QUICK_HELP_ITEMS = [
+    {
+        "title": "📅 Timetable",
+        "description": "Check your class schedule and lesson times.",
+        "question": "How do I check my class timetable?",
+        "key": "quick_timetable",
+    },
+    {
+        "title": "💳 Fees",
+        "description": "Find billing and outstanding fee information.",
+        "question": "Where can I check my current fees?",
+        "key": "quick_fees",
+    },
+    {
+        "title": "📝 Examination",
+        "description": "Check exam timetable, venue, and results.",
+        "question": "Where can I find my exam timetable?",
+        "key": "quick_examination",
+    },
+    {
+        "title": "🎓 Admission",
+        "description": "Get guidance on TARUMT applications.",
+        "question": "How do I apply to TARUMT?",
+        "key": "quick_admission",
+    },
+]
+
+FALLBACK_QUESTIONS = [
+    (
+        "📅 Timetable",
+        "Where can I check my class timetable?",
+        "timetable",
+    ),
+    (
+        "💳 Fees",
+        "Where can I check my current fees?",
+        "fees",
+    ),
+    (
+        "🎓 Admission",
+        "How do I apply to TARUMT?",
+        "admission",
+    ),
+]
+
+MODEL_NAMES = [
+    "Logistic Regression",
+    "LinearSVC",
 ]
 
 
@@ -233,9 +283,15 @@ def reset_chat():
         }
     ]
 
+def reset_feedback():
+    st.session_state.feedback_records = []
+
+    for message in st.session_state.get("messages", []):
+        if "feedback" in message:
+            message["feedback"] = None
 
 def process_user_message(message):
-    if not message:
+    if not message or not message.strip():
         return
 
     st.session_state.messages.append({
@@ -244,7 +300,7 @@ def process_user_message(message):
     })
 
     try:
-        response, intent, score = chatbot(
+        response, intent, _ = chatbot(
             message,
             STUDENT_MODEL,
         )
@@ -253,6 +309,7 @@ def process_user_message(message):
             "role": "assistant",
             "content": response,
             "intent": intent,
+            "feedback": None,
         }
 
         next_action = NEXT_ACTIONS.get(intent)
@@ -270,6 +327,26 @@ def process_user_message(message):
                 "Please try again."
             ),
         })
+
+
+def submit_question(message):
+    process_user_message(message)
+
+    st.session_state.scroll_trigger = (
+        st.session_state.get("scroll_trigger", 0) + 1
+    )
+    st.session_state.scroll_to_latest = True
+    st.rerun()
+
+
+def record_feedback(message_index, intent, feedback):
+    st.session_state.messages[message_index]["feedback"] = feedback
+    st.session_state.feedback_records.append({
+        "intent": intent,
+        "feedback": feedback,
+    })
+    st.rerun()
+
 
 def scroll_chat_to_bottom(trigger_id):
     components.html(
@@ -356,7 +433,11 @@ def scroll_chat_to_bottom(trigger_id):
         """,
         height=0,
     )
-    
+
+# Initialize feedback records
+if "feedback_records" not in st.session_state:
+    st.session_state.feedback_records = []
+
 # Sidebar navigation
 with st.sidebar:
     st.header("🎓 Navigation")
@@ -396,35 +477,22 @@ if page == "🎓 Student Chatbot":
 
     st.subheader("Quick Help")
 
-    quick_cols = st.columns(4)
+    quick_cols = st.columns(len(QUICK_HELP_ITEMS))
 
-    quick_labels = [
-        "📅 Timetable",
-        "💳 Fees",
-        "📝 Examination",
-        "🎓 Admission",
-    ]
-
-    for col, label, question in zip(
-        quick_cols,
-        quick_labels,
-        POPULAR_QUESTIONS,
-    ):
+    for col, item in zip(quick_cols, QUICK_HELP_ITEMS):
         with col:
-            if st.button(
-                label,
-                use_container_width=True,
-            ):
-                process_user_message(question)
+            with st.container(border=True):
+                st.markdown(f"**{item['title']}**")
+                st.caption(item["description"])
 
-                st.session_state.scroll_trigger = (
-                    st.session_state.get("scroll_trigger", 0) + 1
-                )
+                if st.button(
+                    "Ask chatbot",
+                    key=item["key"],
+                    use_container_width=True,
+                ):
+                    submit_question(item["question"])
 
-                st.session_state.scroll_to_latest = True
-                st.rerun()
-
-    st.write(
+    st.caption(
         "You can also ask about scholarships, programmes, and campus facilities."
     )
 
@@ -435,26 +503,91 @@ if page == "🎓 Student Chatbot":
     )
 
     with chat_container:
-        for message in st.session_state.messages:
+        for message_index, message in enumerate(
+            st.session_state.messages
+        ):
             with st.chat_message(message["role"]):
                 st.write(message["content"])
 
                 if "next_action" in message:
-                    st.markdown("**✅ What you can do next**")
+                    st.markdown("**👉 What you can do next**")
                     st.info(message["next_action"])
+
+                if (
+                    message["role"] == "assistant"
+                    and message.get("intent") == "unknown"
+                ):
+                    st.caption("Try one of these common questions:")
+
+                    fallback_cols = st.columns(len(FALLBACK_QUESTIONS))
+
+                    for col, (label, question, key) in zip(
+                        fallback_cols,
+                        FALLBACK_QUESTIONS,
+                    ):
+                        with col:
+                            if st.button(
+                                label,
+                                key=f"fallback_{key}_{message_index}",
+                                use_container_width=True,
+                            ):
+                                submit_question(question)
+
+                # User feedback for chatbot responses
+                if (
+                    message["role"] == "assistant"
+                    and message.get("intent") in FEEDBACK_INTENTS
+                ):
+                    feedback = message.get("feedback")
+
+                    if feedback is None:
+                        st.caption("Was this response helpful?")
+
+                        feedback_col1, feedback_col2 = st.columns(
+                            [1, 1]
+                        )
+
+                        with feedback_col1:
+                            if st.button(
+                                "👍 Helpful",
+                                key=f"helpful_{message_index}",
+                                use_container_width=True,
+                            ):
+                                record_feedback(
+                                    message_index,
+                                    message.get("intent"),
+                                    "helpful",
+                                )
+
+                        with feedback_col2:
+                            if st.button(
+                                "👎 Not Helpful",
+                                key=f"not_helpful_{message_index}",
+                                use_container_width=True,
+                            ):
+                                record_feedback(
+                                    message_index,
+                                    message.get("intent"),
+                                    "not_helpful",
+                                )
+
+                    else:
+                        st.caption(
+                            "✅ Thank you for your feedback!"
+                        )
 
         # Bottom of chat history
         st.markdown(
             '<div id="chat-bottom-anchor"></div>',
             unsafe_allow_html=True,
         )
-            
+
     # Marker for automatic scrolling
     st.markdown(
         '<div id="chat-page-anchor"></div>',
         unsafe_allow_html=True,
     )
-    
+
 
     # Automatically scroll to latest response
     if st.session_state.pop("scroll_to_latest", False):
@@ -468,14 +601,7 @@ if page == "🎓 Student Chatbot":
     )
 
     if user_message:
-        process_user_message(user_message)
-
-        st.session_state.scroll_trigger = (
-            st.session_state.get("scroll_trigger", 0) + 1
-        )
-
-        st.session_state.scroll_to_latest = True
-        st.rerun()
+        submit_question(user_message)
 
 
 # Technical evaluation page
@@ -574,19 +700,179 @@ elif page == "📊 Technical Evaluation":
             "Both models achieved the same accuracy on the unseen test dataset."
         )
 
-    # Confusion matrices
-    with st.expander("View Confusion Matrices"):
-        st.write("**Logistic Regression**")
+    # User feedback summary
+    st.subheader("User Feedback")
 
-        st.dataframe(
-            logistic_cm,
-            use_container_width=True,
+    if st.button(
+        "Reset Feedback",
+        use_container_width=False,
+    ):
+        reset_feedback()
+        st.rerun()
+
+    feedback_df = pd.DataFrame(
+        st.session_state.get("feedback_records", [])
+    )
+
+    if not feedback_df.empty:
+        total_feedback = len(feedback_df)
+        helpful_feedback = (
+            feedback_df["feedback"] == "helpful"
+        ).sum()
+        not_helpful_feedback = (
+            feedback_df["feedback"] == "not_helpful"
+        ).sum()
+        satisfaction_rate = (
+            helpful_feedback / total_feedback
+        ) * 100
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.metric("Responses Rated", total_feedback)
+
+        with col2:
+            st.metric("Helpful", helpful_feedback)
+
+        with col3:
+            st.metric(
+                "Satisfaction Rate",
+                f"{satisfaction_rate:.2f}%",
+            )
+
+        st.write(f"Not Helpful: **{not_helpful_feedback}**")
+
+        # Feedback breakdown by intent
+        feedback_summary = (
+            feedback_df
+            .groupby("intent")
+            .agg(
+                Rated=("feedback", "count"),
+                Helpful=(
+                    "feedback",
+                    lambda x: (x == "helpful").sum()
+                ),
+                Not_Helpful=(
+                    "feedback",
+                    lambda x: (x == "not_helpful").sum()
+                ),
+            )
+            .reset_index()
         )
 
-        st.write("**LinearSVC**")
+        feedback_summary["Satisfaction (%)"] = (
+            feedback_summary["Helpful"]
+            / feedback_summary["Rated"]
+            * 100
+        ).round(2)
+
+        feedback_summary = feedback_summary.rename(
+            columns={
+                "intent": "Intent",
+                "Not_Helpful": "Not Helpful",
+            }
+        )
+
+        st.write("**Feedback by Intent**")
 
         st.dataframe(
-            linearsvc_cm,
+            feedback_summary,
+            use_container_width=True,
+            hide_index=True,
+        )
+
+    else:
+        st.info(
+            "No chatbot responses have been rated "
+            "in the current session yet."
+        )
+
+    # Error analysis
+    st.subheader("Error Analysis")
+
+    logistic_errors = logistic_results[
+        logistic_results["Correct"] == False
+    ]
+
+    linearsvc_errors = linearsvc_results[
+        linearsvc_results["Correct"] == False
+    ]
+
+    error_col1, error_col2 = st.columns(2)
+
+    with error_col1:
+        st.metric(
+            "Logistic Regression Errors",
+            len(logistic_errors),
+        )
+
+    with error_col2:
+        st.metric(
+            "LinearSVC Errors",
+            len(linearsvc_errors),
+        )
+
+    with st.expander("View Misclassified Cases"):
+        error_model = st.selectbox(
+            "Select model",
+            MODEL_NAMES,
+            key="error_analysis_model",
+        )
+
+        if error_model == "Logistic Regression":
+            selected_errors = logistic_errors
+        else:
+            selected_errors = linearsvc_errors
+
+        if selected_errors.empty:
+            st.success(
+                "No misclassified cases were found for this model."
+            )
+        else:
+            st.dataframe(
+                selected_errors[
+                    [
+                        "Question",
+                        "Expected Intent",
+                        "Predicted Intent",
+                    ]
+                ],
+                use_container_width=True,
+                hide_index=True,
+            )
+
+    # Confusion matrices
+    with st.expander("View Confusion Matrices"):
+        st.caption(
+            "Rows represent the actual intent and columns represent the predicted intent. "
+            "Higher values on the diagonal indicate correct predictions."
+        )
+
+        cm_model = st.selectbox(
+            "Select model",
+            MODEL_NAMES,
+            key="confusion_matrix_model",
+        )
+
+        if cm_model == "Logistic Regression":
+            selected_cm = logistic_cm.copy()
+        else:
+            selected_cm = linearsvc_cm.copy()
+
+        selected_cm.index.name = "Actual"
+        selected_cm.columns.name = "Predicted"
+
+        styled_cm = (
+            selected_cm.style
+            .background_gradient(
+                cmap="Blues",
+                axis=None,
+            )
+            .format("{:.0f}")
+        )
+
+        st.dataframe(
+            styled_cm,
             use_container_width=True,
         )
 
@@ -594,10 +880,7 @@ elif page == "📊 Technical Evaluation":
     with st.expander("View Detailed Predictions"):
         model_result = st.selectbox(
             "Select prediction results to view",
-            [
-                "Logistic Regression",
-                "LinearSVC",
-            ],
+            MODEL_NAMES,
         )
 
         if model_result == "Logistic Regression":
