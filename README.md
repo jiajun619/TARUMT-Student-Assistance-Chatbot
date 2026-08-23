@@ -23,6 +23,12 @@ Two machine learning classifiers are implemented and evaluated:
 
 The student-facing chatbot uses LinearSVC as the deployed classification model. Both models are evaluated and compared through the Technical Evaluation page.
 
+## Live Demo
+
+The deployed application is available on Streamlit Community Cloud:
+
+[Open TARUMT Student Assistance Chatbot](https://tarumt-student-assistance-chatbotgit-s2ycueajfitftumbam2z2v.streamlit.app/)
+
 ## Key Features
 
 The chatbot includes the following features:
