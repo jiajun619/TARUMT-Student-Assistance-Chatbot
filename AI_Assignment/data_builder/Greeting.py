@@ -81,6 +81,78 @@ greeting_data = [
         "question": 'Good day assistant',
         "intent": 'greeting',
     },
+    {
+        "question": 'Hi TARUMT assistant',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hello, I need some help',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hey can I ask something?',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Good morning chatbot',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hi I have a question',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hello there, can I ask about TARUMT?',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hey assistant, are you there?',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Good evening, I need assistance',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hi, could you guide me?',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hello, I need information',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hi, I need to ask about TARUMT',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hello, can I get some student information?',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hey, I have a university question',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Good morning, can you assist me with something?',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hello TARUMT chatbot',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hello, I would like some TARUMT guidance',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hi assistant, I have something to ask',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hey, can you help with a student question?',
+        "intent": 'greeting',
+    },
 ]
 
 
@@ -103,6 +175,46 @@ greeting_unseen_data = [
     },
     {
         "question": 'Morning chatbot',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hey, I need some guidance',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hi there, may I ask a question?',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Good afternoon chatbot',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hello, could you assist me today?',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hey TARUMT bot',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hi, may I ask about something related to TARUMT?',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hello, I need some student guidance',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Good morning, I have a question for you',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hi, I need help with a university question',
+        "intent": 'greeting',
+    },
+    {
+        "question": 'Hello assistant, may I ask something?',
         "intent": 'greeting',
     },
 ]

@@ -4,48 +4,206 @@ Good to see you,greeting
 Can you help me?,greeting
 Hello assistant,greeting
 Morning chatbot,greeting
+"Hey, I need some guidance",greeting
+"Hi there, may I ask a question?",greeting
+Good afternoon chatbot,greeting
+"Hello, could you assist me today?",greeting
+Hey TARUMT bot,greeting
+"Hi, may I ask about something related to TARUMT?",greeting
+"Hello, I need some student guidance",greeting
+"Good morning, I have a question for you",greeting
+"Hi, I need help with a university question",greeting
+"Hello assistant, may I ask something?",greeting
 I would like to study here,admission
 What do I need to do to become a student here?,admission
 Can I enrol in this university?,admission
 I am interested in joining this institution,admission
 Where do new students submit their applications?,admission
+"My application has been submitted, how do I track its progress?",admission
+What academic results are required before I can join?,admission
+Where should a prospective student begin the enrolment process?,admission
+"I want to join the next TARUMT intake, what should I do first?",admission
+How can I tell whether my admission documents were received?,admission
+Is there a portal for checking whether I got an offer?,admission
+What do I need before submitting an application online?,admission
+Who should I ask if my university application is still pending?,admission
+My application is submitted but I want to know what happens next,admission
+Where can I check whether my uploaded certificates were accepted?,admission
+"I got an offer from TARUMT, what should I do after that?",admission
+How can a new applicant find the required admission documents?,admission
+Can I change information in an application that was already sent?,admission
+"My application says incomplete, how can I find out what is missing?",admission
+Can I update my academic documents after I already applied?,admission
+Where can I confirm a conditional admission offer?,admission
 What lessons do I have this afternoon?,timetable
 What classes are scheduled for me later today?,timetable
 Do I have any lessons tomorrow morning?,timetable
 Where can I see today's lesson plan?,timetable
 What time does my next class begin?,timetable
+I don't know what class I have after this,timetable
+Has tomorrow's lecture schedule been updated?,timetable
+Where can I find the latest version of my weekly classes?,timetable
+Am I supposed to attend a tutorial this morning?,timetable
+"My lessons are not showing, where should I check?",timetable
+Which room should I go to for today's lecture?,timetable
+What is the first class I have tomorrow?,timetable
+I need to know whether I have class later tonight,timetable
+"I think my lecture time changed, where can I confirm the new time?",timetable
+What is the last class on my schedule tomorrow?,timetable
+Where can I see whether I have a practical session this week?,timetable
+"My timetable shows a different lesson time, how do I verify it?",timetable
+Which tutorial comes after my morning class?,timetable
+"A lecture was rescheduled, where can I see the new slot?",timetable
+"My tutorial is missing from today's schedule, where should I check?",timetable
+What is the first lesson on my Wednesday timetable?,timetable
 Where am I sitting for my paper?,examination
 Where do I need to go for my next test?,examination
 Do I have any papers next week?,examination
 When will my next assessment take place?,examination
 Which room is my exam held in?,examination
+My paper is tomorrow but I do not know the venue,examination
+Has the room for my final exam been updated?,examination
+Where should I look for the official final assessment schedule?,examination
+I need to know when my examination results will appear,examination
+Which paper do I sit first this exam period?,examination
+I cannot find the date for one of my finals,examination
+Where are the details for my upcoming examination session?,examination
+How can I check whether my results have been released?,examination
+How can I confirm whether the room for my paper has changed?,examination
+Which final exam do I have first next week?,examination
+Where can I see the official date and venue for each paper?,examination
+"My examination schedule has changed, where can I verify the latest version?",examination
+When should I expect my final result to appear?,examination
+"My exam venue is empty in the system, where else can I check?",examination
+How can I verify whether a paper was postponed?,examination
+Where do I confirm the latest time for my final exam?,examination
 How much money is left unpaid?,fees
 What amount is still outstanding?,fees
 Do I have any unpaid tuition charges?,fees
 How can I find my remaining balance?,fees
 Is there still a payment due?,fees
+I paid yesterday but my account still says I owe money,fees
+Where can I see a breakdown of what I need to pay?,fees
+How can I confirm the university received my tuition payment?,fees
+"My semester bill has a remaining amount, where do I view it?",fees
+Is there somewhere in the app that shows my latest charges?,fees
+I need proof that my fee payment was successful,fees
+Where do I find the total amount due for this semester?,fees
+Why is my paid fee still listed as outstanding?,fees
+"My payment was made but the balance has not changed, where can I check?",fees
+Where in the app can I confirm the amount I still owe?,fees
+How can I see whether my semester fees are fully settled?,fees
+I need to verify a pending fee payment,fees
+Where can I view new charges added to my current billing?,fees
+Where can I see both what I paid and what is still unpaid?,fees
+"My receipt is not showing, how can I verify the fee transaction?",fees
+How can I check whether a late fee was added?,fees
 Are there grants for students?,scholarship
 Does the university offer study grants?,scholarship
 Can students receive funding support?,scholarship
 What financial assistance can I request?,scholarship
 Are education grants open for application?,scholarship
+"My family needs financial support for my studies, what can I apply for?",scholarship
+Where can I check whether my funding application was successful?,scholarship
+Do good academic results qualify me for any financial award?,scholarship
+What paperwork is needed when requesting study assistance?,scholarship
+Is student funding still open for this semester?,scholarship
+Who can explain the financial aid options available to me?,scholarship
+Can I receive assistance with tuition through a university scholarship?,scholarship
+Where are the eligibility conditions for TARUMT funding listed?,scholarship
+Where are the current merit scholarship conditions published?,scholarship
+How do I check whether I qualify for student financial support?,scholarship
+What documents should I prepare before requesting financial assistance?,scholarship
+Where can I see whether scholarship applications are currently open?,scholarship
+"I already received an offer, can I still apply for funding?",scholarship
+Where can I check the CGPA condition for keeping a scholarship?,scholarship
+"My funding application is pending, how can I see if documents are missing?",scholarship
+Can a current student apply for a grant after enrolment?,scholarship
 What modules are part of my course?,programme
 How many years does this course take?,programme
 What will I learn in this programme?,programme
 Can I see the full course outline?,programme
 Which modules do I take next semester?,programme
+I want to see every subject I need to take before finishing my course,programme
+Where is the semester-by-semester structure for my programme?,programme
+How many study semesters are required to complete this course?,programme
+Which subjects in my programme are compulsory?,programme
+I cannot locate the curriculum for my course,programme
+What will I be studying after my current semester?,programme
+Where can I see how my degree is organised from start to finish?,programme
+Does my course structure show elective modules?,programme
+Where can I see which subjects belong to each semester of my course?,programme
+How do I check what modules remain before I complete my programme?,programme
+Where is the full semester-by-semester curriculum shown?,programme
+Which subjects are part of the final stage of my course?,programme
+How can I confirm whether a module belongs to my programme structure?,programme
+How do I know whether a module is compulsory or elective?,programme
+Where can I find the curriculum for my specific intake?,programme
+Which subjects must be completed before the final semester?,programme
 Where can I print something?,campus_facility
 Is there somewhere to photocopy documents?,campus_facility
 Where can students use computers?,campus_facility
 Is there a quiet place for studying?,campus_facility
 Where can I buy food on campus?,campus_facility
+"I have a long break, where can I sit and do my work?",campus_facility
+Is there a room where students can work quietly together?,campus_facility
+How can I find my way to a campus facility?,campus_facility
+"I need to make a copy of some notes, where should I go?",campus_facility
+Where can I use a desktop computer for an assignment?,campus_facility
+Is there somewhere on campus where I can get lunch?,campus_facility
+"I need a printer before class, where can I find one?",campus_facility
+Where can I look at a map of the campus buildings?,campus_facility
+How can I use the campus map to find a printing area?,campus_facility
+Where is a quiet study space close to my classes?,campus_facility
+Which building should I go to if I need a student computer?,campus_facility
+How can I find the nearest place to buy food on campus?,campus_facility
+Where can I locate the library from the campus map?,campus_facility
+Where can my group meet on campus to work on an assignment?,campus_facility
+"I need to charge my laptop, where can I go?",campus_facility
+How do I find a particular building on the campus map?,campus_facility
+"My timetable says Block H, how can I find it?",campus_facility
+Where should I go for a class at DK Z?,campus_facility
+How can I locate DK ABB on campus?,campus_facility
+"My lecture venue is DK ABF, where is it?",campus_facility
+Where can I find SG E?,campus_facility
+How do I get to SG 3?,campus_facility
+Can the campus map help me find Block K?,campus_facility
+I have a lesson at SG A but I do not know where it is,campus_facility
+Where are the DK ABA to DK ABF lecture rooms?,campus_facility
+How can I find a building code from my class timetable?,campus_facility
 I am finished asking questions,goodbye
 I do not need any more help,goodbye
 That answers all my questions,goodbye
 I am leaving now,goodbye
-I think that's all for now,goodbye
+We can end the conversation,goodbye
+"Thanks, I have everything I need now",goodbye
+That was my last question,goodbye
+"Okay, I can go now",goodbye
+"Thank you, we are done here",goodbye
+I do not need anything else today,goodbye
+"Thanks, that cleared everything up",goodbye
+"Okay, that is all I needed",goodbye
+"I have no more questions, thank you",goodbye
+"Thanks, my question is answered now",goodbye
+"Alright, I am done for today",goodbye
 What is the weather forecast for this weekend?,unknown
 Can you recommend a movie to watch?,unknown
 Who won the football competition yesterday?,unknown
 How do I cook chicken curry?,unknown
 What is the latest world news?,unknown
+I forgot the password for my university email account,unknown
+Where do students sign up for clubs and societies?,unknown
+Who should I contact about industrial training placement?,unknown
+"I lost my student card, what should I do?",unknown
+How can I reserve a university sports facility?,unknown
+Where do I request an academic transcript?,unknown
+Is there student counselling and how do I make an appointment?,unknown
+I need help connecting my laptop to campus wireless internet,unknown
+"My student email account is locked, who can help me?",unknown
+Where can I replace a lost student ID card?,unknown
+How can I sign up for a campus club?,unknown
+"I need help with university WiFi, where should I go?",unknown
+How do I register for graduation?,unknown
+Where do I report a problem with my student portal account?,unknown
+How can I request a student status confirmation letter?,unknown
+Who can help me update my personal address?,unknown

@@ -1,0 +1,137 @@
+question,actual_intent,predicted_intent,correct
+When is the scholarship application deadline?,scholarship,scholarship,True
+exam result release,examination,examination,True
+"Hello, can I get some student information?",greeting,greeting,True
+Can I check my tuition fee balance from my phone?,fees,fees,True
+Where is DK ABD?,campus_facility,campus_facility,True
+How is my programme organised across the semesters?,programme,programme,True
+Which modules are listed for my current semester?,programme,programme,True
+Where can I check the location of student facilities?,campus_facility,campus_facility,True
+Where can I find DK ABC?,campus_facility,campus_facility,True
+How do I get to SG 2?,campus_facility,campus_facility,True
+How do I appeal a disciplinary decision?,unknown,unknown,True
+Good day assistant,greeting,greeting,True
+Hi can you assist me?,greeting,greeting,True
+How do I confirm the final amount due before the deadline?,fees,fees,True
+What should I do if the admission portal shows my application as incomplete?,admission,admission,True
+How do I check if a payment is still pending?,fees,fees,True
+Thanks for the information,goodbye,goodbye,True
+Tell me a joke,unknown,unknown,True
+How can I locate the library using the campus map?,campus_facility,campus_facility,True
+Which tutorial group session is on my timetable?,timetable,timetable,True
+Where can I check whether my scholarship requires a minimum CGPA?,scholarship,scholarship,True
+course outline,programme,programme,True
+Can I study in the library?,campus_facility,campus_facility,True
+Where are student study rooms located?,campus_facility,campus_facility,True
+Where are the student computers located?,campus_facility,campus_facility,True
+"Okay, I understand everything now",goodbye,goodbye,True
+Where is a place for group discussion?,campus_facility,campus_facility,True
+How do I know if I have fulfilled all admission requirements?,admission,admission,True
+What date is my final paper?,examination,examination,True
+How can I check my scholarship application status?,scholarship,scholarship,True
+What time does my next paper begin?,examination,examination,True
+That is enough information for now,goodbye,admission,False
+Is my assessment venue shown online?,examination,examination,True
+How do I get to Block L?,campus_facility,campus_facility,True
+Hello,greeting,greeting,True
+How many semesters do I need to finish?,programme,programme,True
+Where can I check if my exam time has been revised?,examination,examination,True
+How can I apply for a scholarship?,scholarship,scholarship,True
+How can I locate Block E?,campus_facility,campus_facility,True
+Does the campus provide computer facilities?,campus_facility,campus_facility,True
+Is there a photocopier near the library?,campus_facility,campus_facility,True
+"Hello, I would like some TARUMT guidance",greeting,admission,False
+Hello there,greeting,greeting,True
+I want to apply to study here,admission,admission,True
+How do I cook fried rice?,unknown,unknown,True
+What lecture do I have tomorrow morning?,timetable,timetable,True
+Thanks for your help,goodbye,goodbye,True
+Can I apply for financial aid before paying my tuition fees?,scholarship,scholarship,True
+Can I view a receipt for my payment?,fees,fees,True
+Where do I start my TARUMT application?,admission,admission,True
+What is included in my course structure?,programme,programme,True
+How can I see whether my scholarship documents were received?,scholarship,scholarship,True
+Where can I change my TARC App password?,unknown,unknown,True
+Which room should I go to for my exam?,examination,examination,True
+How do I accept an admission offer?,admission,admission,True
+Where can I find SG 3?,campus_facility,campus_facility,True
+How do new students register for a programme?,admission,unknown,False
+How do I get my student ID card?,unknown,unknown,True
+Which class do I have first on Monday?,timetable,timetable,True
+Can I apply to more than one programme?,admission,admission,True
+How can I join a student club?,unknown,unknown,True
+I need to know whether my semester payment is complete,fees,fees,True
+What classes do I have today?,timetable,timetable,True
+How do I locate a building on campus?,campus_facility,campus_facility,True
+Can you play music?,unknown,unknown,True
+Where can I submit a complaint about a lecturer?,unknown,unknown,True
+"My timetable says DK Y, where is that?",campus_facility,campus_facility,True
+Where can I find a quiet place to revise?,campus_facility,campus_facility,True
+That is all I wanted to know,goodbye,admission,False
+How do I check which semester a particular module belongs to?,programme,programme,True
+Where can I view my examination schedule?,examination,examination,True
+What scholarship can I apply for?,scholarship,scholarship,True
+What are the library operating hours?,campus_facility,campus_facility,True
+How do I check whether a subject is compulsory or elective?,programme,programme,True
+Are there quiet study areas?,campus_facility,campus_facility,True
+Okay see you next time,goodbye,timetable,False
+Where is the library?,campus_facility,campus_facility,True
+When is my next paper?,examination,examination,True
+What scholarships are available?,scholarship,scholarship,True
+Will it rain tomorrow?,unknown,examination,False
+Where can I find a printer close to the study area?,campus_facility,campus_facility,True
+What funding support is available for students?,scholarship,scholarship,True
+I forgot what lesson I have next,timetable,timetable,True
+My class schedule is missing,timetable,timetable,True
+Which subjects are part of my final year?,programme,programme,True
+Where can I see the full examination timetable for this semester?,examination,examination,True
+"Thanks, that is everything",goodbye,goodbye,True
+How much money remains unpaid?,fees,fees,True
+Are student grants available?,scholarship,scholarship,True
+Where can I find the complete course outline?,programme,programme,True
+How can I pay my tuition fees?,fees,fees,True
+How much do I need to pay this semester?,fees,fees,True
+How do I know if my fee payment went through?,fees,fees,True
+I need to know my class schedule for tomorrow only,timetable,timetable,True
+Can I view the modules for my next semester?,programme,programme,True
+I want to join TARUMT,admission,admission,True
+Which assessment is scheduled on my last exam day?,examination,examination,True
+student financial aid,scholarship,scholarship,True
+What classes are scheduled this afternoon?,timetable,timetable,True
+Where can I verify a lecture that was rescheduled?,timetable,timetable,True
+What is covered in my course?,programme,programme,True
+Where can I compare available financial assistance options?,scholarship,scholarship,True
+Where is DK ABF?,campus_facility,campus_facility,True
+Yo assistant,greeting,greeting,True
+Okay that answers my question,goodbye,goodbye,True
+Where can I see whether my application is complete or missing documents?,admission,admission,True
+What is two plus two?,unknown,unknown,True
+TARUMT entry requirement,admission,admission,True
+What supporting documents are needed for a scholarship application?,scholarship,scholarship,True
+Why does my account still show an amount due?,fees,fees,True
+Is counselling available for students?,unknown,unknown,True
+I cannot find where to apply for admission,admission,admission,True
+Where do I collect my student ID?,unknown,unknown,True
+Can an international applicant apply through the same online system?,admission,admission,True
+Where can I check whether a late charge was added to my bill?,fees,fees,True
+Where can I check my exam date?,examination,examination,True
+Where can I get something to eat between classes?,campus_facility,campus_facility,True
+How do I find out which modules I still need to take?,programme,programme,True
+Can I change my student portal password?,unknown,unknown,True
+Where can I check today's classes?,timetable,timetable,True
+What courses are included in the coming semester?,programme,programme,True
+What classes do I have tomorrow?,timetable,timetable,True
+Is my tuition payment complete?,fees,fees,True
+Where can I check the time for my practical class?,timetable,timetable,True
+What is the starting time of my final paper?,examination,examination,True
+Which class is scheduled in the afternoon slot?,timetable,timetable,True
+Good evening,greeting,greeting,True
+Can I check the intake date before applying?,admission,admission,True
+Is there a computer laboratory on campus?,campus_facility,campus_facility,True
+Is there a place where I can print an assignment before class?,campus_facility,campus_facility,True
+Where is Block F on the campus map?,campus_facility,campus_facility,True
+When will the final examination result be available to students?,examination,examination,True
+Can I find SG F using the campus map?,campus_facility,campus_facility,True
+Which building contains the computer laboratory?,campus_facility,campus_facility,True
+outstanding payment,fees,fees,True
+Where can I ask about internship placement?,unknown,unknown,True

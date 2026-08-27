@@ -11,7 +11,10 @@ from sklearn.metrics import (
     confusion_matrix,
 )
 
-from Chatbot import chatbot
+from Chatbot import (
+    chatbot,
+    get_selected_model,
+)
 from NLP import rejoin
 
 
@@ -40,19 +43,11 @@ GREETING_MESSAGE = (
 # Load models
 @st.cache_resource
 def load_models():
-    vectorizer = joblib.load(
-        MODEL_DIR / "vectorizer.joblib"
-    )
+    logistic_pipeline = joblib.load(MODEL_DIR / "logistic_pipeline.joblib")
 
-    logistic_model = joblib.load(
-        MODEL_DIR / "logistic_model.joblib"
-    )
+    linearsvc_pipeline = joblib.load(MODEL_DIR / "linearsvc_pipeline.joblib")
 
-    linearsvc_model = joblib.load(
-        MODEL_DIR / "linearsvc_model.joblib"
-    )
-
-    return vectorizer, logistic_model, linearsvc_model
+    return logistic_pipeline, linearsvc_pipeline
 
 
 # Evaluate models using unseen dataset
@@ -67,18 +62,16 @@ def evaluate_models():
     X_test = test_data["processed_question"]
     y_test = test_data["expected_intent"]
 
-    vectorizer, logistic_model, linearsvc_model = load_models()
+    logistic_pipeline, linearsvc_pipeline = load_models()
 
-    X_test_vectorized = vectorizer.transform(X_test)
-
-    # Logistic Regression predictions
-    logistic_predictions = logistic_model.predict(
-        X_test_vectorized
+    # Logistic Regression Predictions
+    logistic_predictions = logistic_pipeline.predict(
+        X_test
     )
 
-    # LinearSVC predictions
-    linearsvc_predictions = linearsvc_model.predict(
-        X_test_vectorized
+    # LinearSVC Predictions
+    linearsvc_predictions = linearsvc_pipeline.predict(
+        X_test
     )
 
     # Logistic Regression metrics
@@ -111,9 +104,9 @@ def evaluate_models():
     comparison = pd.DataFrame({
         "Metric": [
             "Accuracy",
-            "Precision",
-            "Recall",
-            "F1-score",
+            "Macro Precision",
+            "Macro Recall",
+            "Macro F1-score",
         ],
         "Logistic Regression": [
             logistic_accuracy,
@@ -187,9 +180,98 @@ def evaluate_models():
         linearsvc_results,
     )
 
+# Heuristic error-analysis 
+INTENT_KEYWORDS = {
+    "admission": {"apply", "application", "admission", "document", "entry", "status"},
+    "timetable": {"timetable", "schedule", "class", "lecture", "tutorial", "lesson"},
+    "examination": {"exam", "examination", "result", "venue", "test", "final"},
+    "fees": {"fee", "fees", "billing", "payment", "pay", "outstanding", "balance"},
+    "scholarship": {"scholarship", "financial", "aid", "merit", "funding"},
+    "programme": {"programme", "program", "course", "module", "structure", "subject"},
+    "campus_facility": {"campus", "library", "lab", "cafeteria", "facility", "map", "room"},
+    "greeting": {"hello", "hi", "hey", "morning", "afternoon"},
+    "goodbye": {"bye", "goodbye", "thanks", "thank", "see"},
+}
+
+def categorize_error(question, expected_intent, predicted_intent):
+    processed = rejoin(str(question))
+    tokens = processed.split()
+    token_set = set(tokens)
+
+    expected_keywords = INTENT_KEYWORDS.get(expected_intent, set())
+    predicted_keywords = INTENT_KEYWORDS.get(predicted_intent, set())
+
+    expected_hits = token_set & expected_keywords
+    predicted_hits = token_set & predicted_keywords
+
+    matched_intents = []
+    for intent, keywords in INTENT_KEYWORDS.items():
+        if token_set & keywords:
+            matched_intents.append(intent)
+
+    # User Queries with very little words
+    if len(tokens) <= 2:
+        return (
+            "Insufficient / sparse wording",
+            "The question contains very few informative tokens after preprocessing.",
+            "Add short and informal paraphrases of this question to the training data.",
+        )
+
+    # User Queries with multiple different intents
+    if len(set(matched_intents)) >= 2:
+        return (
+            "Ambiguous or multi-intent question",
+            "The wording contains cues associated with more than one supported intent.",
+            "Add similar multi-intent examples and define which intent should take priority, or ask a clarification question.",
+        )
+
+    # Preprocessing may have removed useful information.
+    raw_words = str(question).lower().split()
+    if len(raw_words) >= 5 and len(tokens) <= max(2, len(raw_words) // 3):
+        return (
+            "Possible preprocessing information loss",
+            "A large proportion of the original words were removed or normalized during preprocessing.",
+            "Inspect the cleaned text and revise stopword removal/lemmatization if useful intent cues are being lost.",
+        )
+
+    # The expected vocabulary is present, yet model predicts something else.
+    if expected_hits:
+        return (
+            "Likely training-data coverage issue",
+            f"The question contains expected-intent cues ({', '.join(sorted(expected_hits))}) but was still misclassified.",
+            "Add more varied examples for this wording pattern and review class balance and confusing neighbouring intents.",
+        )
+
+    return (
+        "Unseen vocabulary / training coverage",
+        "The question uses wording that is not strongly represented by the simple intent keyword patterns.",
+        "Add paraphrases with this vocabulary to the training dataset and review the learned feature coverage.",
+    )
+
+# Create the interface of the error analysis
+def build_error_analysis(results):
+    errors = results[results["Correct"] == False].copy()
+
+    if errors.empty:
+        return errors
+
+    analysis = errors.apply(
+        lambda row: categorize_error(
+            row["Question"],
+            row["Expected Intent"],
+            row["Predicted Intent"],
+        ),
+        axis=1,
+    )
+
+    errors["Error Category"] = [item[0] for item in analysis]
+    errors["Explanation"] = [item[1] for item in analysis]
+    errors["Recommended Improvement"] = [item[2] for item in analysis]
+
+    return errors
 
 # Student-facing settings
-STUDENT_MODEL = "LinearSVC"
+STUDENT_MODEL = get_selected_model()
 
 NEXT_ACTIONS = {
     "admission": (
@@ -300,7 +382,7 @@ def process_user_message(message):
     })
 
     try:
-        response, intent, _ = chatbot(
+        response, intent, score = chatbot(
             message,
             STUDENT_MODEL,
         )
@@ -309,6 +391,7 @@ def process_user_message(message):
             "role": "assistant",
             "content": response,
             "intent": intent,
+            "score": score,
             "feedback": None,
         }
 
@@ -463,10 +546,9 @@ with st.sidebar:
             reset_chat()
             st.rerun()
 
-
 # Student chatbot page
 if page == "🎓 Student Chatbot":
-    st.title("🎓 TARUMT Student Assistance Chatbot")
+    st.header("🎓 TARUMT Student Assistance Chatbot")
 
     st.caption(
         "Ask a TARUMT-related question and get guidance on what to do next."
@@ -475,31 +557,8 @@ if page == "🎓 Student Chatbot":
     if "messages" not in st.session_state:
         reset_chat()
 
-    st.subheader("Quick Help")
-
-    quick_cols = st.columns(len(QUICK_HELP_ITEMS))
-
-    for col, item in zip(quick_cols, QUICK_HELP_ITEMS):
-        with col:
-            with st.container(border=True):
-                st.markdown(f"**{item['title']}**")
-                st.caption(item["description"])
-
-                if st.button(
-                    "Ask chatbot",
-                    key=item["key"],
-                    use_container_width=True,
-                ):
-                    submit_question(item["question"])
-
-    st.caption(
-        "You can also ask about scholarships, programmes, and campus facilities."
-    )
-
-    # Scrollable chat history
     chat_container = st.container(
-        height=520,
-        border=True,
+        #border=True,
     )
 
     with chat_container:
@@ -582,27 +641,31 @@ if page == "🎓 Student Chatbot":
             unsafe_allow_html=True,
         )
 
-    # Marker for automatic scrolling
-    st.markdown(
-        '<div id="chat-page-anchor"></div>',
-        unsafe_allow_html=True,
+    # Compact Quick Help directly below the chat area.
+    st.markdown("##### ⚡ Quick Help")
+
+    quick_cols = st.columns(len(QUICK_HELP_ITEMS))
+
+    for col, item in zip(quick_cols, QUICK_HELP_ITEMS):
+        with col:
+            if st.button(
+                item["title"],
+                key=item["key"],
+                use_container_width=True,
+            ):
+                submit_question(item["question"])
+
+    st.caption(
+        "You can also ask about scholarships, programmes, and campus facilities."
     )
 
-
-    # Automatically scroll to latest response
-    if st.session_state.pop("scroll_to_latest", False):
-        scroll_chat_to_bottom(
-            st.session_state.get("scroll_trigger", 0)
-        )
-
-    # Fixed chat input
+    # Typing bar
     user_message = st.chat_input(
         "Ask a TARUMT question..."
     )
 
     if user_message:
         submit_question(user_message)
-
 
 # Technical evaluation page
 elif page == "📊 Technical Evaluation":
@@ -683,22 +746,55 @@ elif page == "📊 Technical Evaluation":
             f"{linearsvc_accuracy * 100:.2f}%",
         )
 
+    # Macro F1 summary
+    logistic_f1 = comparison.loc[
+        comparison["Metric"] == "Macro F1-score",
+        "Logistic Regression",
+    ].iloc[0]
+
+    linearsvc_f1 = comparison.loc[
+        comparison["Metric"] == "Macro F1-score",
+        "LinearSVC",
+    ].iloc[0]
+
     # Best model
-    if logistic_accuracy > linearsvc_accuracy:
+    #if logistic_accuracy > linearsvc_accuracy:
+    #    st.success(
+    #        "Logistic Regression achieved the higher accuracy on the unseen "
+    #        "test dataset."
+    #    )
+
+    #elif linearsvc_accuracy > logistic_accuracy:
+    #    st.success(
+    #        "LinearSVC achieved the higher accuracy on the unseen test dataset."
+    #    )
+
+    #else:
+    #    st.info(
+    #        "Both models achieved the same accuracy on the unseen test dataset."
+    #    )
+
+    if logistic_f1 > linearsvc_f1:
         st.success(
-            "Logistic Regression achieved the higher accuracy on the unseen "
-            "test dataset."
+            "Logistic Regression achieved the higher "
+            "Macro F1 on the unseen dataset."
         )
 
-    elif linearsvc_accuracy > logistic_accuracy:
+    elif linearsvc_f1 > logistic_f1:
         st.success(
-            "LinearSVC achieved the higher accuracy on the unseen test dataset."
+            "LinearSVC achieved the higher "
+            "Macro F1 on the unseen dataset."
         )
 
     else:
         st.info(
-            "Both models achieved the same accuracy on the unseen test dataset."
+            "Both models achieved the same "
+            "Macro F1 on the unseen dataset."
         )
+# Training model selection -> Macro F1
+# Unseen comparison -> Macro F1
+# Accuracy -> still reported as supporting metric
+
 
     # User feedback summary
     st.subheader("User Feedback")
@@ -839,6 +935,83 @@ elif page == "📊 Technical Evaluation":
                 ],
                 use_container_width=True,
                 hide_index=True,
+            )
+
+    # Error Evaluation
+    with st.expander("Error Evaluation"):
+
+        logistic_errors = build_error_analysis(
+            logistic_results
+        )
+    
+        linearsvc_errors = build_error_analysis(
+            linearsvc_results
+        )
+    
+        error_evaluation_model = st.selectbox(
+            "Select model",
+            MODEL_NAMES,
+            key="error_evaluation_model",
+        )
+    
+        if error_evaluation_model == "Logistic Regression":
+            evaluation_errors = logistic_errors
+        else:
+            evaluation_errors = linearsvc_errors
+    
+        if evaluation_errors.empty:
+            st.success(
+                "No misclassified classes were found, so there are no errors to evaluate."
+            )
+        else:
+            st.caption(
+                "The categories below are diagnostic heuristics that help explain "
+                "possible error patterns but they are not exactly root causes."
+            )
+    
+            category_summary = (
+                evaluation_errors["Error Category"]
+                .value_counts()
+                .rename_axis("Error Category")
+                .reset_index(name="Count")
+            )
+    
+            category_summary["Percentage"] = (
+                category_summary["Count"] / len(evaluation_errors) * 100
+            ).round(2)
+    
+            st.write("Error Category Summary")
+            st.dataframe(
+                category_summary,
+                use_container_width=True,
+                hide_index=True,
+            )
+    
+            st.write("Diagnostic Evaluation of Misclassified Cases")
+            st.dataframe(
+                evaluation_errors[
+                    [
+                        "Question",
+                        "Expected Intent",
+                        "Predicted Intent",
+                        "Error Category",
+                        "Explanation",
+                        "Recommended Improvement",
+                    ]
+                ],
+    
+                use_container_width=True,
+                hide_index=True,
+            )
+    
+            most_common_category = category_summary.iloc[0]["Error Category"]
+            most_common_count = int(category_summary.iloc[0]["Count"])
+    
+            st.info(
+                f"Most common observed error pattern: {most_common_category} "
+                f"({most_common_count} of {len(evaluation_errors)} errors). "
+                "This is the first area to prioritize when improving the dataset "
+                "or classifier."
             )
 
     # Confusion matrices

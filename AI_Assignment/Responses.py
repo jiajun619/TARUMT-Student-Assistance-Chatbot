@@ -1,3 +1,5 @@
+import random
+
 responses_data = {
     "greeting": [
         "Hello! How can I assist you with your TARUMT enquiry today?",
@@ -59,12 +61,147 @@ responses_data = {
             "I can assist with common TARUMT student enquiries."
         ),
         (
-            "I’m unable to assist with that topic. "
+            "I'm unable to assist with that topic. "
             "Please try one of the supported TARUMT topics below."
         ),
         (
-            "I’m not sure how to answer that question. "
+            "I'm not sure how to answer that question. "
             "This chatbot is designed for common TARUMT student enquiries."
         ),
     ],
 }
+
+specific_responses = {
+    "campus_facility": {
+        "dk x": (
+            "lecture block DK X are located nearby library.",
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "dk y": (
+            "lecture block DK Y are located nearby library."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "dk z": (
+            "lecture block DK Z are located nearby library."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "dk aba": (
+            "lecture block DK ABA are located at east campus."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "dk abb": (
+            "lecture block DK ABB are located at east campus."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "dk abc": (
+            "lecture block DK ABC are located at east campus."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "dk abd": (
+            "lecture block DK ABD are located at east campus."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "dk abe": (
+            "lecture block DK ABE are located at east campus."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "dk abf": (
+            "lecture block DK ABF are located at east campus."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "sg 1": (
+            "You can locate SG 1 using the Campus Map in the TARC App."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "sg 2": (
+            "You can locate SG 2 using the Campus Map in the TARC App."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "sg 3": (
+            "You can locate SG 3 using the Campus Map in the TARC App."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "sg 4": (
+            "You can locate SG 4 using the Campus Map in the TARC App."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "library": (
+            "You can locate the library using the Campus Map in the TARC App."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+
+        "computer lab": (
+            "You can locate computer laboratories using the Campus Map in the TARC App."
+            "or refer to the campus map from this link: https://www.scribd.com/document/339707399/TAR-UC-Map"
+        ),
+    },
+
+    "fees": {
+        ("current billing", "bill", "fees now", "fees"): (
+            "Open the TARC App and go to "
+            "Billing → Current Billing to view "
+            "your current charges."
+        ),
+
+        "outstanding": (
+            "You can check your outstanding fees "
+            "under Billing → Current Billing "
+            "in the TARC App."
+        ),
+
+        ("it", "arts", "foundation", "diploma", "degree", "business"): (
+            "You can check fees "
+            "from this link https://www.tarc.edu.my/bursary/malaysian-student-fees-guide/ "
+            "under the fees guide"
+        )
+
+    },
+
+    "programme": {
+        ("programme", "structure"): (
+            "Log in to Student Intranet using this link https://web.tarc.edu.my/portal/login.jsp and go to "
+            "Programme → Programme Structure."
+        ),
+    },
+}
+
+def get_response(message, intent):
+    message_lower = message.lower()
+
+    intent_responses = specific_responses.get(
+        intent,
+        {}
+    )
+
+    # Try specific responses first
+    for keywords, response in intent_responses.items():
+
+        if isinstance(keywords, str):
+            keywords = (keywords,)
+
+        if any(
+            keyword in message_lower
+            for keyword in keywords
+        ):
+            return response
+
+     # If not use a general response
+    return random.choice(
+        responses_data.get(
+            intent,
+            responses_data["unknown"],
+        )
+    )
