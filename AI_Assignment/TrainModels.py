@@ -183,7 +183,7 @@ def evaluate_internal(model_name, search):
     print("=" * 60)
 
     print(f"Accuracy: {accuracy:.4f}")
-    print(f"Marco F1: {macro_f1:.4f}")
+    print(f"Macro F1: {macro_f1:.4f}")
     print()
 
     print(
@@ -245,7 +245,7 @@ print("=" * 60)
 print(comparison.to_string(index=False))
 print()
 
-# Select student-facing model using untouched internal Macro F1. (Marco F1 -> balanced performance across all intents)
+# Select student-facing model using untouched internal Macro F1. (Macro F1 -> balanced performance across all intents)
 # Accuracy is used only as a tie-breaker. (Accuracy -> overall percentage correct)
 if linearsvc_macro_f1 > logistic_macro_f1:
     selected_model = "LinearSVC"
